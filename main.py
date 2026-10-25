@@ -12,14 +12,14 @@ from procesamiento import (
 def main() -> None:
     """Función principal que gestiona el menú interactivo del sistema escolar."""
     cantidad = 0
-    opcion = -1
     nombres = [""]
     parcial1 = [0]
     parcial2 = [0]
     promedios = [0.0]
+    salir = False
 
     # Bucle principal del sistema
-    while opcion != 0:
+    while not salir:
         print("\n===== NOTAFÁCIL =====")
         print("1. Cargar alumnos")
         print("2. Mostrar listado")
@@ -66,6 +66,7 @@ def main() -> None:
 
             case 0:
                 print("\nSaliendo del sistema... ¡Hasta luego!")
+                salir = True
 
             case _:
                 print("\nOpción inválida. Por favor, seleccione una opción correcta.")
