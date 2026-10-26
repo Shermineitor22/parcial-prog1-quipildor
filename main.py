@@ -1,6 +1,6 @@
-from validaciones import crear_lista, validar_alumnos, validar_entero
+from validaciones import validar_entero
 from procesamiento import (
-    cargar_listas,
+    inicializar_y_cargar_curso,
     listar_alumnos,
     buscar_alumno,
     procesar_nombre_usuario,
@@ -34,35 +34,32 @@ def main() -> None:
         match opcion:
             case 1:
                 # Paso 1: Validar cantidad de alumnos e inicializar listas paralelas
-                cantidad = validar_alumnos()
-
-                nombres = crear_lista(cantidad, "")
-                parcial1 = crear_lista(cantidad, 0)
-                parcial2 = crear_lista(cantidad, 0)
-                promedios = crear_lista(cantidad, 0.0)
-
-                # Paso 2: Cargar y procesar notas
-                cargar_listas(cantidad, nombres, parcial1, parcial2, promedios)
+                cantidad, nombres, parcial1, parcial2, promedios = inicializar_y_cargar_curso()
 
             case 2:
                 # Mostrar listado completo de alumnos y notas
-                listar_alumnos(cantidad, nombres, parcial1, parcial2, promedios)
+                resultado_listado = listar_alumnos(cantidad, nombres, parcial1, parcial2, promedios)
+                print(resultado_listado)
 
             case 3:
                 # Calcular e imprimir reporte de estadísticas globales
-                imprimir_estadisticas(cantidad, nombres, promedios)
+                resultado_estadisticas = imprimir_estadisticas(cantidad, nombres, promedios)
+                print(resultado_estadisticas)
 
             case 4:
                 # Mostrar el ranking ordenado mediante listas copia estáticas
-                mostrar_ranking_ordenado(cantidad, nombres, promedios)
+                resultado_ranking = mostrar_ranking_ordenado(cantidad, nombres, promedios)
+                print(resultado_ranking)
 
             case 5:
                 # Búsqueda interactiva de alumno por nombre y notas
-                buscar_alumno(cantidad, nombres, parcial1, parcial2, promedios)
+                resultado_busqueda = buscar_alumno(cantidad, nombres, parcial1, parcial2, promedios)
+                print(resultado_busqueda)
 
             case 6:
                 # Juego de nombres y contador de vocales 
-                procesar_nombre_usuario(nombres, cantidad)
+                resultado_juego = procesar_nombre_usuario(nombres, cantidad)
+                print(resultado_juego)
 
             case 0:
                 print("\nSaliendo del sistema... ¡Hasta luego!")

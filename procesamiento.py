@@ -4,7 +4,7 @@ Contiene funciones individuales para la carga de datos, cálculos matemáticos,
 estadísticas globales, ordenamiento burbuja y utilidades de texto.
 """
 
-from validaciones import validar_nombre, validar_nota, validar_entero 
+from validaciones import validar_nombre, validar_nota, validar_entero, validar_alumnos, crear_lista
 
 
 def cargar_listas(cantidad: int, nombres: list, parcial1: list, parcial2: list, promedios: list) -> None:
@@ -44,31 +44,65 @@ def cargar_listas(cantidad: int, nombres: list, parcial1: list, parcial2: list, 
 
     print("\nCarga de alumnos se realizo con éxito")
 
+    return cantidad, nombres, parcial1, parcial2, promedios
 
-def listar_alumnos(cantidad: int, nombres: list, parcial1: list, parcial2: list, promedios: list) -> None:
-    """Muestra en pantalla el listado completo de alumnos junto con sus notas 
 
-    de parciales y promedios individuales.
+def inicializar_y_cargar_curso() -> list[float | int | str]:
+    """Valida la cantidad de alumnos, crea las listas paralelas estáticas
+    e invoca la función de carga interactiva para registrar las notas y promedios.
+
+    Returns:
+        tuple[int, list[str], list[int], list[int], list[float | int]]: 
+            Una tupla que contiene:
+            - cantidad (int): Cantidad total de alumnos cargados.
+            - nombres (list[str]): Lista con los nombres de los alumnos.
+            - parcial1 (list[int]): Lista con las notas del primer parcial.
+            - parcial2 (list[int]): Lista con las notas del segundo parcial.
+            - promedios (list[float | int]): Lista con los promedios calculados.
+    """
+    cantidad = validar_alumnos()
+    
+    nombres = crear_lista(cantidad, "")
+    parcial1 = crear_lista(cantidad, 0)
+    parcial2 = crear_lista(cantidad, 0)
+    promedios = crear_lista(cantidad, 0.0)
+    
+    cargar_listas(cantidad, nombres, parcial1, parcial2, promedios)
+    
+    return cantidad, nombres, parcial1, parcial2, promedios
+
+
+def listar_alumnos(cantidad: int, nombres: list[str], parcial1: list[int], parcial2: list[int], promedios: list[float | int]) -> str:
+    """Genera y retorna un texto formateado con el listado completo de alumnos, 
+    sus notas de parciales y promedios individuales.
 
     Args:
         cantidad (int): Cantidad total de alumnos cargados.
-        nombres (list): Lista de nombres.
-        parcial1 (list): Lista de notas del primer parcial.
-        parcial2 (list): Lista de notas del segundo parcial.
-        promedios (list): Lista de promedios.
+        nombres (list[str]): Lista con los nombres de los alumnos.
+        parcial1 (list[int]): Lista con las notas del primer parcial.
+        parcial2 (list[int]): Lista con las notas del segundo parcial.
+        promedios (list[float | int]): Lista con los promedios calculados.
+
+    Returns:
+        str: El reporte completo formateado para su visualización o un aviso 
+             si no hay alumnos cargados.
     """
     if cantidad == 0:
-        print("\nNo hay alumnos cargados en el sistema.")
-        return
+        reporte = "\nNo hay alumnos cargados en el sistema.\n"
 
-    print("\n LISTADO DE ALUMNOS Y SUS NOTAS ")
-    for i in range(len(nombres)):
-        print(f"Alumno: {nombres[i]}")
-        print(f"Nota del primer parcial: {parcial1[i]} . Nota del segundo parcial: {parcial2[i]}")
-        print(f"Su promedio es: {promedios[i]}")
+    else:
+        reporte = "\n LISTADO DE ALUMNOS Y SUS NOTAS \n"
+
+        for i in range(cantidad):
+            reporte += f"Alumno: {nombres[i]}\n"
+            reporte += f"Nota del primer parcial: {parcial1[i]}\n"
+            reporte += f"Nota del segundo parcial: {parcial2[i]}\n"
+            reporte += f"Su promedio es: {promedios[i]}\n"
+
+    return reporte
 
 
-def promediar_curso(cantidad: int, promedios: list[float | int]) -> None:
+def promediar_curso(cantidad: int, promedios: list[float | int]) -> str:
     """Calcula y muestra el promedio general de todo el curso a partir 
 
     de los promedios individuales de los alumnos.
@@ -84,10 +118,11 @@ def promediar_curso(cantidad: int, promedios: list[float | int]) -> None:
         promedio_alumnos += promedios[i]
 
     promedio_general = promedio_alumnos / cantidad
-    print(f"El promedio general del curso es de: {promedio_general}")
+    reporte = f"El promedio general del curso es de: {promedio_general}\n"
+    return reporte
 
 
-def obtener_mejor_y_peor_promedio(cantidad: int, nombres: list[str], promedios: list[float | int]) -> None:
+def obtener_mejor_y_peor_promedio(cantidad: int, nombres: list[str], promedios: list[float | int]) -> str:
     """Encuentra y muestra el o los alumnos con el mejor y peor promedio,
 
     gestionando empates sin utilizar métodos dinámicos.
@@ -97,7 +132,6 @@ def obtener_mejor_y_peor_promedio(cantidad: int, nombres: list[str], promedios: 
         nombres (list[str]): Lista que contiene los nombres de los alumnos.
         promedios (list[float | int]): Lista que contiene los promedios de los alumnos.
     """
-
     mejor_promedio = promedios[0]
     peor_promedio = promedios[0]
 
@@ -107,20 +141,22 @@ def obtener_mejor_y_peor_promedio(cantidad: int, nombres: list[str], promedios: 
         if promedios[i] < peor_promedio:
             peor_promedio = promedios[i]
 
-    print("\n EXTREMOS DEL CURSO ")
+    reporte = "\n EXTREMOS DEL CURSO\n"
 
-    print(f"Mejor/es promedio/s ({mejor_promedio}):")
+    reporte += f"Mejor/es promedio/s ({mejor_promedio}):\n"
     for i in range(cantidad):
         if promedios[i] == mejor_promedio:
-            print(f"Nombre: {nombres[i]} y su promedio es: {promedios[i]}")
+            reporte += f"Nombre: {nombres[i]} y su promedio es: {promedios[i]}\n"
 
-    print(f"Peor/es promedio/s ({peor_promedio}):")
+    reporte += f"\nPeor/es promedio/s ({peor_promedio}):\n"
     for i in range(cantidad):
         if promedios[i] == peor_promedio:
-            print(f"Nombre: {nombres[i]} y su promedio es: {promedios[i]}")
+            reporte += f"Nombre: {nombres[i]} y su promedio es: {promedios[i]}\n"
+
+    return reporte
 
 
-def contar_condiciones_alumnos(cantidad: int, promedios: list[float | int]) -> None:
+def contar_condiciones_alumnos(cantidad: int, promedios: list[float | int]) -> str:
     """Cuenta y muestra la cantidad de alumnos según su condición académica:
 
     Promociona (>= 6), Aprueba (>= 4 y < 6) y Desaprueba (< 4).
@@ -141,13 +177,15 @@ def contar_condiciones_alumnos(cantidad: int, promedios: list[float | int]) -> N
         else:
             desaprueban += 1
 
-    print("\n ESTADO ACADÉMICO DE LOS ALUMNOS ")
-    print(f"Los Alumnos que promocionan son (promedio mayores a 6): {promocionan}")
-    print(f"Los Alumnos que aprueban son (promedio entre 4 y 6): {aprueban}")
-    print(f"Los Alumnos que desaprueban son (promedio menores a 4): {desaprueban}")
+    reporte = "\n ESTADO ACADÉMICO DE LOS ALUMNOS\n"
+    reporte += f"Los Alumnos que promocionan son (promedio mayores a 6): {promocionan}\n"
+    reporte += f"Los Alumnos que aprueban son (promedio entre 4 y 6): {aprueban}\n"
+    reporte += f"Los Alumnos que desaprueban son (promedio menores a 4): {desaprueban}\n"
+
+    return reporte
 
 
-def imprimir_estadisticas(cantidad: int, nombres: list[str], promedios: list[float | int]) -> None:
+def imprimir_estadisticas(cantidad: int, nombres: list[str], promedios: list[float | int]) -> str:
     """Función unificadora que imprime todas las estadísticas globales del curso,
 
     incluyendo el promedio general, extremos e informe de condiciones.
@@ -158,16 +196,18 @@ def imprimir_estadisticas(cantidad: int, nombres: list[str], promedios: list[flo
         promedios (list[float | int]): Lista de promedios.
     """
     if cantidad == 0:
-        print("\nNo hay alumnos cargados en el sistema.")
-        return
+        reporte = "\nNo hay alumnos cargados en el sistema.\n"
+        return reporte
 
-    print("\n ESTADÍSTICAS DEL CURSO ")
-    promediar_curso(cantidad, promedios)
-    obtener_mejor_y_peor_promedio(cantidad, nombres, promedios)
-    contar_condiciones_alumnos(cantidad, promedios)
+    reporte = "\n ESTADÍSTICAS DEL CURSO\n"
+    reporte += promediar_curso(cantidad, promedios)
+    reporte += obtener_mejor_y_peor_promedio(cantidad, nombres, promedios)
+    reporte += contar_condiciones_alumnos(cantidad, promedios)
+
+    return reporte
 
 
-def mostrar_ranking_ordenado(cantidad: int, nombres: list[str], promedios: list[float | int]) -> None:
+def mostrar_ranking_ordenado(cantidad: int, nombres: list[str], promedios: list[float | int]) -> str:
     """Genera y muestra un ranking ordenado de los alumnos del mejor al peor promedio
 
     utilizando el algoritmo de ordenamiento burbuja en listas copia paralelas.
@@ -178,8 +218,8 @@ def mostrar_ranking_ordenado(cantidad: int, nombres: list[str], promedios: list[
         promedios (list[float | int]): Lista que contiene los promedios de los alumnos.
     """
     if cantidad == 0:
-        print("\nNo hay alumnos cargados en el sistema.")
-        return
+        reporte = "\nNo hay alumnos cargados en el sistema.\n"
+        return reporte
 
     # Declaración de variables ordenadas una debajo de la otra
     aux_nombre = ""
@@ -206,13 +246,14 @@ def mostrar_ranking_ordenado(cantidad: int, nombres: list[str], promedios: list[
                 nombres_copia[j + 1] = aux_nombre
 
     # Impresión del ranking ordenado en pantalla
-    print("\n RANKING DE ALUMNOS (MEJOR A PEOR PROMEDIO) ")
+    reporte = "\n RANKING DE ALUMNOS (MEJOR A PEOR PROMEDIO)\n"
     for i in range(cantidad):
-        print(f"{i + 1}. Alumno: {nombres_copia[i]} con un Promedio: {promedios_copia[i]:.2f}")
+        reporte += f"{i + 1}. Alumno: {nombres_copia[i]} con un Promedio: {promedios_copia[i]}\n"
+
+    return reporte
 
 
-
-def buscar_alumno(cantidad: int, nombres: list[str], parcial1: list[int], parcial2: list[int], promedios: list[float | int]) -> None:
+def buscar_alumno(cantidad: int, nombres: list[str], parcial1: list[int], parcial2: list[int], promedios: list[float | int]) -> str:
     """Busca un alumno por su nombre en las listas paralelas. 
 
     Si lo encuentra, muestra sus notas y su promedio; 
@@ -229,26 +270,30 @@ def buscar_alumno(cantidad: int, nombres: list[str], parcial1: list[int], parcia
     nombre_a_buscar = ""
 
     if cantidad == 0:
-        print("\nNo hay alumnos cargados en el sistema.")
-        return
+        reporte = "\nNo hay alumnos cargados en el sistema.\n"
+        return reporte
 
     while not encontrado:
         nombre_a_buscar = input("Ingrese el nombre del alumno que desea buscar: ")
 
         for i in range(cantidad):
-
             if nombre_a_buscar == nombres[i]:
-                print("\n ALUMNO ENCONTRADO ")
-                print(f"Alumno: {nombres[i]}")
-                print(f"Su nota en el primer parcial: {parcial1[i]} y en el segundo parcial: {parcial2[i]}")
-                print(f"Su promedio es: {promedios[i]:.2f}")
+                reporte = "\n ALUMNO ENCONTRADO\n"
+                reporte += f"Alumno: {nombres[i]}\n"
+                reporte += f"Su nota en el primer parcial: {parcial1[i]} y en el segundo parcial: {parcial2[i]}\n"
+                reporte += f"Su promedio es: {promedios[i]}\n"
                 encontrado = True
+                break  # Cortamos el for una vez encontrado
 
+        # Si terminó el for y sigue sin encontrarse, imprimimos el aviso al instante
         if not encontrado:
             print("\nEl alumno no fue cargado al sistema, intente nuevamente.")
 
+    # Al salir del while (porque ya se encontró), retorna el reporte completo del alumno
+    return reporte
 
-def procesar_nombre_usuario(lista_nombres: list[str], cantidad: int) -> None:
+
+def procesar_nombre_usuario(lista_nombres: list[str], cantidad: int) -> str:
     """Pide al usuario un nombre de alumno, valida mediante un bucle que 
 
     el nombre pertenezca a la lista utilizando la cantidad, lo invierte
@@ -260,8 +305,8 @@ def procesar_nombre_usuario(lista_nombres: list[str], cantidad: int) -> None:
         cantidad (int): Número entero que indica cuántos alumnos están cargados.
     """
     if cantidad == 0:
-        print("\nNo hay alumnos cargados en el sistema.")
-        return
+        reporte = "\nNo hay alumnos cargados en el sistema.\n"
+        return reporte
 
     encontrado = False
     nombre = ""
@@ -296,7 +341,9 @@ def procesar_nombre_usuario(lista_nombres: list[str], cantidad: int) -> None:
                 total_vocales += 1
                 break
 
-    print(f"\n JUEGO CON EL NOMBRE ")
-    print(f"Nombre del alumno: {nombre}")
-    print(f"Nombre invertido: {nombre_invertido}")
-    print(f"Cantidad total de vocales: {total_vocales}")
+    reporte = "\n JUEGO CON EL NOMBRE\n"
+    reporte += f"Nombre del alumno: {nombre}\n"
+    reporte += f"Nombre invertido: {nombre_invertido}\n"
+    reporte += f"Cantidad total de vocales: {total_vocales}\n"
+
+    return reporte
