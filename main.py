@@ -52,7 +52,7 @@ def main() -> None:
                 print(resultado_ranking)
 
             case 5:
-                # Búsqueda interactiva de alumno por nombre y notas
+                # Búsqueda de alumno por nombre y notas
                 resultado_busqueda = buscar_alumno(cantidad, nombres, parcial1, parcial2, promedios)
                 print(resultado_busqueda)
 
@@ -70,6 +70,5 @@ def main() -> None:
 
 
 # Punto de entrada estándar del programa
-# if __name__ == "__main__":
-
-main()
+if __name__ == "__main__":
+    main()

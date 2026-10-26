@@ -1,8 +1,3 @@
-"""Módulo de validaciones para el proyecto NotaFácil.
-
-Contiene funciones robustas para validar la cantidad de alumnos,
-los nombres, las notas y la creación estática de listas paralelas.
-"""
 
 
 def validar_entero(mensaje: str) -> int:

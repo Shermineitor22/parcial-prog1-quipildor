@@ -1,13 +1,8 @@
-"""Módulo de procesamiento y estadísticas para el proyecto NotaFácil.
-
-Contiene funciones individuales para la carga de datos, cálculos matemáticos,
-estadísticas globales, ordenamiento burbuja y utilidades de texto.
-"""
 
 from validaciones import validar_nombre, validar_nota, validar_entero, validar_alumnos, crear_lista
 
 
-def cargar_listas(cantidad: int, nombres: list, parcial1: list, parcial2: list, promedios: list) -> None:
+def cargar_listas(cantidad: int, nombres: list, parcial1: list, parcial2: list, promedios: list):
     """Solicita y valida de forma interactiva los nombres y las notas 
 
     de los dos parciales para cada alumno, calculando su promedio.
@@ -44,7 +39,7 @@ def cargar_listas(cantidad: int, nombres: list, parcial1: list, parcial2: list, 
 
     print("\nCarga de alumnos se realizo con éxito")
 
-    return cantidad, nombres, parcial1, parcial2, promedios
+    return  nombres, parcial1, parcial2, promedios
 
 
 def inicializar_y_cargar_curso() -> list[float | int | str]:
@@ -221,18 +216,15 @@ def mostrar_ranking_ordenado(cantidad: int, nombres: list[str], promedios: list[
         reporte = "\nNo hay alumnos cargados en el sistema.\n"
         return reporte
 
-    # Declaración de variables ordenadas una debajo de la otra
     aux_nombre = ""
     aux_promedios = 0.0
     nombres_copia = [""] * cantidad
     promedios_copia = [0.0] * cantidad
 
-    # Copia estática para no alterar el orden original de las listas del curso
     for i in range(cantidad):
         nombres_copia[i] = nombres[i]
         promedios_copia[i] = promedios[i]
 
-    # Algoritmo de ordenamiento burbuja adaptado con la estructura del profesor
     for i in range(cantidad - 1):
         for j in range(cantidad - 1 - i):
             if promedios_copia[j] < promedios_copia[j + 1]:
@@ -245,7 +237,6 @@ def mostrar_ranking_ordenado(cantidad: int, nombres: list[str], promedios: list[
                 nombres_copia[j] = nombres_copia[j + 1]
                 nombres_copia[j + 1] = aux_nombre
 
-    # Impresión del ranking ordenado en pantalla
     reporte = "\n RANKING DE ALUMNOS (MEJOR A PEOR PROMEDIO)\n"
     for i in range(cantidad):
         reporte += f"{i + 1}. Alumno: {nombres_copia[i]} con un Promedio: {promedios_copia[i]}\n"
@@ -283,13 +274,11 @@ def buscar_alumno(cantidad: int, nombres: list[str], parcial1: list[int], parcia
                 reporte += f"Su nota en el primer parcial: {parcial1[i]} y en el segundo parcial: {parcial2[i]}\n"
                 reporte += f"Su promedio es: {promedios[i]}\n"
                 encontrado = True
-                break  # Cortamos el for una vez encontrado
+                break  
 
-        # Si terminó el for y sigue sin encontrarse, imprimimos el aviso al instante
         if not encontrado:
             print("\nEl alumno no fue cargado al sistema, intente nuevamente.")
 
-    # Al salir del while (porque ya se encontró), retorna el reporte completo del alumno
     return reporte
 
 
@@ -325,8 +314,8 @@ def procesar_nombre_usuario(lista_nombres: list[str], cantidad: int) -> str:
         if not encontrado:
             print("Error: El alumno no se encuentra en el listado. Intente nuevamente.")
 
-    for i in nombre:
-        nombre_invertido = i + nombre_invertido
+    for i in range(len(nombre)):
+        nombre_invertido = nombre[i] + nombre_invertido
 
     for i in range(len(nombre)):
         caracter = nombre[i]
